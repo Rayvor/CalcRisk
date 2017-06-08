@@ -78,6 +78,7 @@ namespace CalcRisk
                 dataGridClearFlows.Rows[1].Cells[i].Value = cell;
                 dataGridMoneyFlows.Rows[0].Cells[i].Value = (i + 1).ToString();
                 dataGridClearFlows.Rows[0].Cells[i].Value = (i + 1).ToString();
+
             }
         }
     }
