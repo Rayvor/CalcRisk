@@ -265,5 +265,31 @@ namespace CalcRisk
                     ct[i] = inputIst[0, i] / inputIst[1, i];
             }
         }
+
+        public double[,] GetInputStr
+        {
+            get {return inputStr;}
+        }
+
+        public double[,] GetInputIst
+        {
+            get { return inputIst; }
+        }
+
+        public double[,] GetGeneration
+        {
+            get { return generation; }
+        }
+
+        public double[,] GetCov
+        {
+            get { return cov; }
+        }
+
+        public int GetPUPCount
+        {
+            get { return PUPCount; }
+        }
+
     }
 }

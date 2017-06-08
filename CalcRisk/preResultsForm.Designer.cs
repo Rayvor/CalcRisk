@@ -35,6 +35,7 @@
             this.dataGridMoneyFlows = new System.Windows.Forms.DataGridView();
             this.dataGridRandomValues = new System.Windows.Forms.DataGridView();
             this.dataGridMatrixCov = new System.Windows.Forms.DataGridView();
+            this.dataGridClearFlows = new System.Windows.Forms.DataGridView();
             this.tabControl.SuspendLayout();
             this.tabMoneyFlows.SuspendLayout();
             this.tabRandomValues.SuspendLayout();
@@ -42,6 +43,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMoneyFlows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRandomValues)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMatrixCov)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridClearFlows)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -59,6 +61,7 @@
             // 
             // tabMoneyFlows
             // 
+            this.tabMoneyFlows.Controls.Add(this.dataGridClearFlows);
             this.tabMoneyFlows.Controls.Add(this.dataGridMoneyFlows);
             this.tabMoneyFlows.Location = new System.Drawing.Point(4, 28);
             this.tabMoneyFlows.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -95,33 +98,63 @@
             // 
             // dataGridMoneyFlows
             // 
+            this.dataGridMoneyFlows.AllowUserToAddRows = false;
+            this.dataGridMoneyFlows.AllowUserToDeleteRows = false;
+            this.dataGridMoneyFlows.AllowUserToResizeRows = false;
             this.dataGridMoneyFlows.BackgroundColor = System.Drawing.Color.White;
             this.dataGridMoneyFlows.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridMoneyFlows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridMoneyFlows.ColumnHeadersVisible = false;
+            this.dataGridMoneyFlows.Dock = System.Windows.Forms.DockStyle.Top;
             this.dataGridMoneyFlows.Location = new System.Drawing.Point(3, 4);
             this.dataGridMoneyFlows.Name = "dataGridMoneyFlows";
-            this.dataGridMoneyFlows.Size = new System.Drawing.Size(696, 436);
+            this.dataGridMoneyFlows.RowHeadersVisible = false;
+            this.dataGridMoneyFlows.Size = new System.Drawing.Size(696, 211);
             this.dataGridMoneyFlows.TabIndex = 0;
             // 
             // dataGridRandomValues
             // 
+            this.dataGridRandomValues.AllowUserToAddRows = false;
+            this.dataGridRandomValues.AllowUserToDeleteRows = false;
+            this.dataGridRandomValues.AllowUserToResizeRows = false;
             this.dataGridRandomValues.BackgroundColor = System.Drawing.Color.White;
             this.dataGridRandomValues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridRandomValues.ColumnHeadersVisible = false;
             this.dataGridRandomValues.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridRandomValues.Location = new System.Drawing.Point(3, 4);
             this.dataGridRandomValues.Name = "dataGridRandomValues";
+            this.dataGridRandomValues.RowHeadersVisible = false;
             this.dataGridRandomValues.Size = new System.Drawing.Size(696, 436);
             this.dataGridRandomValues.TabIndex = 1;
             // 
             // dataGridMatrixCov
             // 
+            this.dataGridMatrixCov.AllowUserToAddRows = false;
+            this.dataGridMatrixCov.AllowUserToDeleteRows = false;
+            this.dataGridMatrixCov.AllowUserToResizeRows = false;
             this.dataGridMatrixCov.BackgroundColor = System.Drawing.Color.White;
             this.dataGridMatrixCov.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridMatrixCov.ColumnHeadersVisible = false;
             this.dataGridMatrixCov.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridMatrixCov.Location = new System.Drawing.Point(3, 4);
             this.dataGridMatrixCov.Name = "dataGridMatrixCov";
+            this.dataGridMatrixCov.RowHeadersVisible = false;
             this.dataGridMatrixCov.Size = new System.Drawing.Size(696, 436);
             this.dataGridMatrixCov.TabIndex = 2;
+            // 
+            // dataGridClearFlows
+            // 
+            this.dataGridClearFlows.AllowUserToAddRows = false;
+            this.dataGridClearFlows.AllowUserToDeleteRows = false;
+            this.dataGridClearFlows.AllowUserToResizeRows = false;
+            this.dataGridClearFlows.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridClearFlows.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridClearFlows.ColumnHeadersVisible = false;
+            this.dataGridClearFlows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridClearFlows.Location = new System.Drawing.Point(3, 215);
+            this.dataGridClearFlows.Name = "dataGridClearFlows";
+            this.dataGridClearFlows.RowHeadersVisible = false;
+            this.dataGridClearFlows.Size = new System.Drawing.Size(696, 225);
+            this.dataGridClearFlows.TabIndex = 1;
             // 
             // preResultsForm
             // 
@@ -140,6 +173,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMoneyFlows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRandomValues)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMatrixCov)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridClearFlows)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -153,5 +187,6 @@
         private System.Windows.Forms.DataGridView dataGridMoneyFlows;
         private System.Windows.Forms.DataGridView dataGridRandomValues;
         private System.Windows.Forms.DataGridView dataGridMatrixCov;
+        private System.Windows.Forms.DataGridView dataGridClearFlows;
     }
 }
