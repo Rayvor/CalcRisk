@@ -26,6 +26,7 @@ namespace CalcRisk
         double[] ct = new double[100]; //массив для Ct
         bool flag; //флаг ошибки
         bool isGener; //флаг расчета предварительных результатов
+        int number; //число
 
 
         DataGridView tbInputSob, tbInputZaem, tbInputDiap, tbInputDeter;
