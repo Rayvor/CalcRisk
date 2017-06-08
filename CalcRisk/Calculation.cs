@@ -27,6 +27,7 @@ namespace CalcRisk
         bool flag; //флаг ошибки
         bool isGener; //флаг расчета предварительных результатов
 
+
         DataGridView tbInputSob, tbInputZaem, tbInputDiap, tbInputDeter;
 
         public Calculation(DataGridView tbInputSob, DataGridView tbInputZaem,
