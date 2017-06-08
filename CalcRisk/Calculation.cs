@@ -9,7 +9,7 @@ namespace CalcRisk
 {
     public class Calculation
     {
-        int PUPCount;
+        int PUPCount; // число ПУП
         double[,] inputStr = new double[18, 100]; //денежные потоки
         double[,] inputIst = new double[2, 100]; //источники финансирования
         double[,] generation = new double[502, 700]; //генерации
