@@ -269,5 +269,32 @@ namespace CalcRisk
             }
 
         }
+
+        private void выполнитьРасчетToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Calculation calc = new Calculation(
+                dataGridEquity,
+                dataGridBorrow,
+                dataGridRangeComp,
+                dataGridDeterComp,
+                txtCoef,
+                txtStartInvest,
+                (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);
+
+            for (int i = 0; i < calc.GetPUPCount; i++)
+            {
+                var cell = Math.Round(calc.GetNPVt[1, i], 2);
+                dataGridResults.Rows[i].Cells[2].Value = cell;
+                cell = Math.Round(calc.GetVt[i], 2);
+                dataGridResults.Rows[i].Cells[3].Value = cell;
+                cell = Math.Round(calc.GetRt[2, i], 2);
+                dataGridResults.Rows[i].Cells[4].Value = cell;
+                cell = Math.Round(calc.GetCt[i], 2);
+                dataGridResults.Rows[i].Cells[1].Value = cell;
+                cell = Math.Round(calc.GetSigmaNPV[1,i], 2);
+                dataGridResults.Rows[i].Cells[5].Value = cell;
+            }
+
+        }
     }
 }

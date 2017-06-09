@@ -49,29 +49,25 @@ namespace CalcRisk
         {
             flag = false;
             //---Считываем денежные потоки---            
-            for (int i = 3; i < PUPCount + 3; i++)
+            for (int j = 3; j < PUPCount + 3; j++)
             {
                 //Доходы от реализации продукции
-                inputStr[0, i - 3] = double.Parse((string)tbInputDiap.Rows[0].Cells[i].Value);
-                inputStr[1, i - 3] = double.Parse((string)tbInputDiap.Rows[1].Cells[i].Value);
-                //Эксплуатационные затраты
-                inputStr[6, i - 3] = double.Parse((string)tbInputDiap.Rows[2].Cells[i].Value);
-                inputStr[7, i - 3] = double.Parse((string)tbInputDiap.Rows[3].Cells[i].Value);
-                //Налоги
-                inputStr[8, i - 3] = double.Parse((string)tbInputDiap.Rows[4].Cells[i].Value);
-                inputStr[9, i - 3] = double.Parse((string)tbInputDiap.Rows[5].Cells[i].Value);
-            }
-
-            for (int i = 2; i < PUPCount + 2; i++)
-            {
+                inputStr[0, j - 3] = Convert.ToDouble(tbInputDiap.Rows[0].Cells[j].Value);
+                inputStr[1, j - 3] = Convert.ToDouble(tbInputDiap.Rows[1].Cells[j].Value);
                 //Возмещение НДС по инвестициям
-                inputStr[2, i - 2] = double.Parse((string)tbInputDeter.Rows[0].Cells[i].Value);
+                inputStr[2, j - 3] = Convert.ToDouble(tbInputDeter.Rows[0].Cells[j - 1].Value);
                 //Амортизация
-                inputStr[3, i - 2] = double.Parse((string)tbInputDeter.Rows[1].Cells[i].Value);
+                inputStr[3, j - 3] = Convert.ToDouble(tbInputDeter.Rows[1].Cells[j - 1].Value);
                 //Инвестиции, включая НДС
-                inputStr[4, i - 2] = double.Parse((string)tbInputDeter.Rows[2].Cells[i].Value);
+                inputStr[4, j - 3] = Convert.ToDouble(tbInputDeter.Rows[2].Cells[j - 1].Value);
                 //Прирост оборотных средств
-                inputStr[5, i - 2] = double.Parse((string)tbInputDeter.Rows[3].Cells[i].Value);
+                inputStr[5, j - 3] = Convert.ToDouble(tbInputDeter.Rows[3].Cells[j - 1].Value);
+                //Эксплуатационные затраты
+                inputStr[6, j - 3] = Convert.ToDouble(tbInputDiap.Rows[2].Cells[j].Value);
+                inputStr[7, j - 3] = Convert.ToDouble(tbInputDiap.Rows[3].Cells[j].Value);
+                //Налоги
+                inputStr[8, j - 3] = Convert.ToDouble(tbInputDiap.Rows[4].Cells[j].Value);
+                inputStr[9, j - 3] = Convert.ToDouble(tbInputDiap.Rows[5].Cells[j].Value);
             }
             //---Считываем источники финансирования--- 
             for (int i = 0; i < PUPCount; i++)
@@ -86,7 +82,7 @@ namespace CalcRisk
         {
             double Sum; int s; int t;
             //считываем минимум и максимум по сальдо денежных потоков
-            //---чистые деежные потоки
+            //---чистые денежные потоки
             for (int i = 0; i < PUPCount; i++)
             {
                 //мин
@@ -127,8 +123,9 @@ namespace CalcRisk
                 for (int i = 0; i < 500; i++)
                 {
                     generation[i, j + PUPCount] = Math.Pow(generation[i, j] - inputStr[17, j], 2);
+                    Sum += generation[i, j + PUPCount];
                 }
-                generation[500, j + 11] = Sum;
+                generation[500, j + 12] = Sum;
             }
             //Расчет среднеквадратичных отклонений
             for (int i = 0; i < 500; i++)
@@ -138,43 +135,44 @@ namespace CalcRisk
             for (int k = 0; k < 500; k++)
             {
                 s = 0;
-                for (int i = 0; i < PUPCount - 1; i++)
+                for (int i = 1; i <=  PUPCount - 1; i++)
                 {
-                    for (int j = 1; j < PUPCount; j++)
+                    for (int j = i + 1; j <= PUPCount; j++)
                     {
-                        generation[k, 3 * PUPCount + s + j - i] =
-                            generation[k, 2 * PUPCount + i] * generation[k, 2 * PUPCount + j];
-                        generation[501, 3 * PUPCount + s + j - i] = int.Parse(i.ToString() + j.ToString());
+                        generation[k, 3 * PUPCount + s + j - i - 1] =
+                            generation[k, 2 * PUPCount + i - 1] * generation[k, 2 * PUPCount + j - 1];
+                        string ij = i.ToString() + j.ToString();
+                        generation[501, 3 * PUPCount + s + j - i - 2] = int.Parse(ij);
                     }
-                    s += PUPCount - i;
+                    s += PUPCount - i - 1;
                 }
             }
             t = 0;
-            for (int i = 0; i < PUPCount; i++)
+            for (int i = 1; i <= PUPCount; i++)
                 t += i;
-            for (int j = 3 * PUPCount; j < t + 3 * PUPCount; j++)
+            for (int j = 3 * PUPCount + 1; j <= t + 3 * PUPCount; j++)
             {
                 Sum = 0;
                 for (int i = 0; i < 500; i++)
-                    Sum += generation[i, j];
-                generation[500, j] = Sum;
+                    Sum += generation[i, j - 1];
+                generation[500, j - 1] = Sum;
             }
 
             //Расчет матрицы ковариации
             for (int i = 0; i < PUPCount; i++)
-                cov[i, i] = generation[500, i + 11] / 500;
+                cov[i, i] = generation[500, i + 12] / 500;
 
-            for (int j = 1; j < PUPCount; j++)
+            for (int j = 2; j <= PUPCount; j++)
             {
-                for (int i = 1; i < j; i++)
+                for (int i = 1; i <= j; i++)
                 {
                     if (!(i == j))
                     {
-                        for (int k = PUPCount; k < t + 3 * PUPCount; k++)
+                        for (int k = PUPCount + 1; k <= t + 3 * PUPCount; k++)
                         {
-                            if (generation[501, k].ToString() == i.ToString() + j.ToString())
+                            if (generation[501, k - 1].ToString() == (i).ToString() + (j).ToString())
                             {
-                                cov[i, j] = generation[500, k] / 500;
+                                cov[i - 1, j- 1] = generation[500, k - 1] / 500;
                                 break;
                             }
                         }
@@ -184,50 +182,50 @@ namespace CalcRisk
 
             //Расчет NPVt
             for (int i = 0; i < PUPCount; i++)
-                nPVt[0, i] = inputStr[17, i] / Math.Pow(сoef, i);
+                nPVt[0, i] = inputStr[17, i] / Math.Pow(сoef, i + 1);
 
-            for (int i = 0; i < PUPCount; i++)
+            for (int i = 1; i <= PUPCount; i++)
             {
                 Sum = 0;
-                for (int j = 0; j < i; j++)
-                    Sum += nPVt[0, j];
-                nPVt[1, i] = Sum - firstCap;
+                for (int j = 1; j <= i; j++)
+                    Sum += nPVt[0, j - 1];
+                nPVt[1, i - 1] = Sum - firstCap;
             }
             //Расчет Rt
             rtZnam = 0;
             for (int i = 0; i < PUPCount; i++)
                 rtZnam += nPVt[0, i];
             rtZnam -= firstCap;
-            for (int i = 1; i < PUPCount; i++)
-                rt[0, i - 1] = inputStr[16, i] / Math.Pow(сoef, i);
-            for (int i = 0; i < PUPCount - 1; i++)
+            for (int i = 1; i <= PUPCount; i++)
+                rt[0, i - 1] = inputStr[16, i] / Math.Pow(сoef, i + 1);
+            for (int i = 1; i <= PUPCount - 1; i++)
             {
                 Sum = 0;
-                for (int j = PUPCount - 2; j < i; j--)
-                    Sum += rt[0, j];
-                rt[1, i] = Sum;
+                for (int j = PUPCount - 1; j >= i; j--)
+                    Sum += rt[0, j - 1];
+                rt[1, i - 1] = Sum;
             }
             for (int i = 0; i < PUPCount - 1; i++)
                 rt[2, i] = (nPVt[1, i] + rt[1, i]) / rtZnam;
 
             //Расчет сигма NPV
             for (int i = 0; i < PUPCount; i++)
-                sigmaNPV[0, i] = (inputStr[17, i] - inputStr[16, i]) * Math.Pow(сoef, i);
-            for (int i = 0; i < PUPCount; i++)
+                sigmaNPV[0, i] = (inputStr[17, i] - inputStr[16, i]) * Math.Pow(сoef, i + 1);
+            for (int i = 1; i <= PUPCount; i++)
             {
                 Sum = 0;
-                for (int j = 1; j < i; j++)
-                    Sum += sigmaNPV[0, j];
-                sigmaNPV[1, i] = Math.Pow(Sum, 2);
+                for (int j = 1; j <= i; j++)
+                    Sum += sigmaNPV[0, j - 1];
+                sigmaNPV[1, i - 1] = Math.Pow(Sum, 2);
             }
             for (int i = 0; i < PUPCount; i++)
                 sigmaNPV[1, i] = Math.Sqrt(sigmaNPV[1, i]);
 
             //Расчет Vt
-            //---Расчет проваго слагаемого Vt
-            for (int j = 2; j < PUPCount; j++)
-                for (int i = 0; i < j - 1; i++)
-                    rightSumVt[i, j - 1] = cov[i, j] / Math.Pow(сoef, i + j);
+            //---Расчет правого слагаемого Vt
+            for (int j = 3; j <= PUPCount; j++)
+                for (int i = 1; i <= j - 1; i++)
+                    rightSumVt[i - 1, j - 2] = cov[i - 1, j - 1] / Math.Pow(сoef, i + j);
             for (int j = 0; j < PUPCount - 1; j++)
             {
                 Sum = 0;
@@ -235,22 +233,22 @@ namespace CalcRisk
                     Sum += rightSumVt[i, j];
                 rightSumVt[PUPCount, j] = Sum;
             }
-            for (int i = 0; i < PUPCount - 1; i++)
+            for (int i = 1; i <= PUPCount - 1; i++)
             {
                 Sum = 0;
-                for (int j = 0; j < i; j++)
-                    Sum += rightSumVt[PUPCount, j];
-                rightSumVt[PUPCount + 1, i] = Sum;
+                for (int j = 1; j <= i; j++)
+                    Sum += rightSumVt[PUPCount, j - 1];
+                rightSumVt[PUPCount + 1, i - 1] = Sum;
             }
             //---Расчет левого слагаемого Vt
             for (int i = 0; i < PUPCount; i++)
-                leftSumVt[0, i] = cov[i, i] / Math.Pow(сoef, 2 * i);
-            for (int i = 0; i < PUPCount; i++)
+                leftSumVt[0, i] = cov[i, i] / Math.Pow(сoef, 2 * (i +1));
+            for (int i = 1; i <= PUPCount; i++)
             {
                 Sum = 0;
-                for (int j = 0; j < i; j++)
-                    Sum += leftSumVt[0, j];
-                leftSumVt[1, i] = Sum;
+                for (int j = 1; j <= i; j++)
+                    Sum += leftSumVt[0, j - 1];
+                leftSumVt[1, i - 1] = Sum;
             }
             vt[0] = leftSumVt[1, 0];
             for (int i = 1; i < PUPCount; i++)
@@ -265,6 +263,9 @@ namespace CalcRisk
                     ct[i] = inputIst[0, i] / inputIst[1, i];
             }
         }
+
+
+        #region Getters
 
         public double[,] GetInputStr
         {
@@ -290,6 +291,32 @@ namespace CalcRisk
         {
             get { return PUPCount; }
         }
+
+        public double[,] GetNPVt
+        {
+            get { return nPVt; }
+        }
+
+        public double[] GetVt
+        {
+            get { return vt; }
+        }
+
+        public double[,] GetRt
+        {
+            get { return rt; }
+        }
+
+        public double[] GetCt
+        {
+            get { return ct; }
+        }
+
+        public double[,] GetSigmaNPV
+        {
+            get { return sigmaNPV; }
+        }
+#endregion
 
     }
 }
