@@ -16,8 +16,7 @@ namespace CalcRisk
 {
     public partial class mainForm : Form
     {
-        int oldNumPeriods;
-        int numPeriods;
+        IntWrapper NumPeriods;
         Calculation calc;
 
         public mainForm()
@@ -28,36 +27,37 @@ namespace CalcRisk
 
         private void numPeriods_ValueChanged(object sender, EventArgs e)
         {
-            numPeriods = (int)((NumericUpDown)nudNumPeriods.NumericUpDownControl).Value;
+            NumPeriods.Value = (int)((NumericUpDown)nudNumPeriods.NumericUpDownControl).Value;
             int numColDataGridEquity = dataGridEquity.ColumnCount;
             int numColDataGridBorrow = dataGridBorrow.ColumnCount;
             int numColDataGridRangeComp = dataGridRangeComp.ColumnCount;
             int numColDataGridDeterComp = dataGridDeterComp.ColumnCount;
             int numRowDataGridResults = dataGridResults.RowCount;
 
-            if (numPeriods < oldNumPeriods)
+            if (NumPeriods.Value < NumPeriods.OldValue)
             {
-                dataGridEquity.Columns[numPeriods].Visible = false;
-                dataGridBorrow.Columns[numPeriods].Visible = false;
-                dataGridRangeComp.Columns[numPeriods + 3].Visible = false;
-                dataGridDeterComp.Columns[numPeriods + 2].Visible = false;
-                dataGridResults.Rows[numPeriods].Visible = false;
-                oldNumPeriods = numPeriods;
+                dataGridEquity.Columns[NumPeriods.Value].Visible = false;
+                dataGridBorrow.Columns[NumPeriods.Value].Visible = false;
+                dataGridRangeComp.Columns[NumPeriods.Value + 3].Visible = false;
+                dataGridDeterComp.Columns[NumPeriods.Value + 2].Visible = false;
+                dataGridResults.Rows[NumPeriods.Value].Visible = false;
+                NumPeriods.OldValue = NumPeriods.Value;
             }
-            else if (numPeriods > oldNumPeriods)
+            else if (NumPeriods.Value > NumPeriods.OldValue)
             {
-                oldNumPeriods = numPeriods;
-                dataGridEquity.Columns[numPeriods - 1].Visible = true;
-                dataGridBorrow.Columns[numPeriods - 1].Visible = true;
-                dataGridRangeComp.Columns[numPeriods + 2].Visible = true;
-                dataGridDeterComp.Columns[numPeriods + 1].Visible = true;
-                dataGridResults.Rows[numPeriods - 1].Visible = true;
+                NumPeriods.OldValue = NumPeriods.Value;
+                dataGridEquity.Columns[NumPeriods.Value - 1].Visible = true;
+                dataGridBorrow.Columns[NumPeriods.Value - 1].Visible = true;
+                dataGridRangeComp.Columns[NumPeriods.Value + 2].Visible = true;
+                dataGridDeterComp.Columns[NumPeriods.Value + 1].Visible = true;
+                dataGridResults.Rows[NumPeriods.Value - 1].Visible = true;
             }
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Программу выполнил студент группы МИТ-13-2");
+            //MessageBox.Show("Программу выполнил студент группы МИТ-13-2");
+            (new aboutForm()).Show();
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,6 +77,9 @@ namespace CalcRisk
                 (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);
 
             построитьГрафикToolStripMenuItem.Enabled = true;
+            ctToolStripMenuItem.Enabled = true;
+            nPVtToolStripMenuItem.Enabled = true;
+            vtToolStripMenuItem.Enabled = true;
 
             (new preResultsForm(calc)).Show();
         }
@@ -99,14 +102,19 @@ namespace CalcRisk
                 (new graphForm(calc, "Vt")).Show();
         }
 
+        private void собствЗаемнToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            (new graphForm(dataGridEquity, dataGridBorrow, NumPeriods.Value)).Show();
+        }
+
         private void SetDefaultSetting()
         {
             toolStrip.Renderer = new ToolStripSysRenderer();
 
             int numPeriods = (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value;
-            oldNumPeriods = (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value;
+            NumPeriods = new IntWrapper(numPeriods, numPeriods);
 
-            for (int i = 1; i <= numPeriods; i++)
+            for (int i = 1; i <= NumPeriods.Value; i++)
             {
                 DataGridViewColumn col = new DataGridViewTextBoxColumn();
                 col.HeaderText = i.ToString();
@@ -115,7 +123,7 @@ namespace CalcRisk
                 dataGridEquity.Columns.Add(col);
             }
 
-            for (int i = 1; i <= numPeriods; i++)
+            for (int i = 1; i <= NumPeriods.Value; i++)
             {
                 DataGridViewColumn col = new DataGridViewTextBoxColumn();
                 col.HeaderText = i.ToString();
@@ -124,7 +132,7 @@ namespace CalcRisk
                 dataGridBorrow.Columns.Add(col);
             }
 
-            for (int i = 1; i <= numPeriods; i++)
+            for (int i = 1; i <= NumPeriods.Value; i++)
             {
                 DataGridViewColumn col = new DataGridViewTextBoxColumn();
                 col.HeaderText = i.ToString();
@@ -133,7 +141,7 @@ namespace CalcRisk
                 dataGridRangeComp.Columns.Add(col);
             }
 
-            for (int i = 1; i <= numPeriods; i++)
+            for (int i = 1; i <= NumPeriods.Value; i++)
             {
                 DataGridViewColumn col = new DataGridViewTextBoxColumn();
                 col.HeaderText = i.ToString();
@@ -166,9 +174,9 @@ namespace CalcRisk
             dataGridDeterComp.Rows[2].Cells[1].Value = "Инвестиции";
             dataGridDeterComp.Rows[3].Cells[1].Value = "Прирост оборотных средств";
 
-            dataGridResults.Rows.Add(numPeriods);
+            dataGridResults.Rows.Add(NumPeriods.Value);
 
-            for (int i = 1; i <= numPeriods; i++ )
+            for (int i = 1; i <= NumPeriods.Value; i++ )
             {
                 dataGridResults.Rows[i - 1].Cells[0].Value = i;
             }
@@ -192,9 +200,13 @@ namespace CalcRisk
             dataGridDeterComp.Columns[1].Width = 267;
             dataGridDeterComp.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            построитьГрафикToolStripMenuItem.Enabled = false;
+            ctToolStripMenuItem.Enabled = false;
+            nPVtToolStripMenuItem.Enabled = false;
+            vtToolStripMenuItem.Enabled = false;
+            собствЗаемнToolStripMenuItem.Enabled = false;
             просмотрПредварительныхРезультатовToolStripMenuItem.Enabled = false;
-            расчетToolStripMenuItem.Enabled = false;
+            выполнитьРасчетToolStripMenuItem.Enabled = false;           
+
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -203,7 +215,7 @@ namespace CalcRisk
 
             //openFileDialog.InitialDirectory = @"C:\Users\neoql\Downloads\KNIR\Два сюжета\Два сюжета\Инвестиционный проект\Осташова М.В. МИ-04-2\программа";
             openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-            openFileDialog.Filter = "txt файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            openFileDialog.Filter = "xlsx файлы (*.xlsx)|*.xlsx|Все файлы (*.*)|*.*";
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
@@ -212,9 +224,12 @@ namespace CalcRisk
                 OpenFileXls(openFileDialog.FileName, false);
             }
 
-            построитьГрафикToolStripMenuItem.Enabled = false;
+            ctToolStripMenuItem.Enabled = false;
+            nPVtToolStripMenuItem.Enabled = false;
+            vtToolStripMenuItem.Enabled = false;
+            собствЗаемнToolStripMenuItem.Enabled = true;
             просмотрПредварительныхРезультатовToolStripMenuItem.Enabled = true;
-            расчетToolStripMenuItem.Enabled = true;
+            выполнитьРасчетToolStripMenuItem.Enabled = true;
         }
 
         private void OpenFileXls(string strfilepath, bool hasHeader = true)
@@ -314,6 +329,9 @@ namespace CalcRisk
             }
 
             построитьГрафикToolStripMenuItem.Enabled = true;
+            ctToolStripMenuItem.Enabled = true;
+            nPVtToolStripMenuItem.Enabled = true;
+            vtToolStripMenuItem.Enabled = true;
 
         }
     }
