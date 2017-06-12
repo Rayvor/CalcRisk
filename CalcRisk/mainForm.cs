@@ -281,18 +281,21 @@ namespace CalcRisk
                 txtStartInvest,
                 (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);
 
-            for (int i = 0; i < calc.GetPUPCount; i++)
+            for (int i = 1; i <= calc.GetPUPCount; i++)
             {
-                var cell = Math.Round(calc.GetNPVt[1, i], 2);
-                dataGridResults.Rows[i].Cells[2].Value = cell;
+                var cell = Math.Round(calc.GetNPVt[2, i], 2);
+                dataGridResults.Rows[i - 1].Cells[2].Value = cell;
                 cell = Math.Round(calc.GetVt[i], 2);
-                dataGridResults.Rows[i].Cells[3].Value = cell;
-                cell = Math.Round(calc.GetRt[2, i], 2);
-                dataGridResults.Rows[i].Cells[4].Value = cell;
+                dataGridResults.Rows[i - 1].Cells[3].Value = cell;
                 cell = Math.Round(calc.GetCt[i], 2);
-                dataGridResults.Rows[i].Cells[1].Value = cell;
-                cell = Math.Round(calc.GetSigmaNPV[1,i], 2);
-                dataGridResults.Rows[i].Cells[5].Value = cell;
+                dataGridResults.Rows[i - 1].Cells[1].Value = cell;
+                cell = Math.Round(calc.GetSigmaNPV[2,i], 2);
+                dataGridResults.Rows[i - 1].Cells[5].Value = cell;
+            }
+            for (int i = 1; i <= calc.GetPUPCount - 1; i++)
+            {
+                var cell = Math.Round(calc.GetRt[3, i], 7);
+                dataGridResults.Rows[i].Cells[4].Value = cell;
             }
 
         }
