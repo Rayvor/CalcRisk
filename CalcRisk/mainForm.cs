@@ -18,6 +18,7 @@ namespace CalcRisk
     {
         int oldNumPeriods;
         int numPeriods;
+        Calculation calc;
 
         public mainForm()
         {
@@ -66,7 +67,7 @@ namespace CalcRisk
 
         private void просмотрПредварительныхРезультатовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Calculation calc = new Calculation(
+            calc = new Calculation(
                 dataGridEquity,
                 dataGridBorrow,
                 dataGridRangeComp,
@@ -75,22 +76,27 @@ namespace CalcRisk
                 txtStartInvest,
                 (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);
 
+            построитьГрафикToolStripMenuItem.Enabled = true;
+
             (new preResultsForm(calc)).Show();
         }
 
         private void ctToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (new graphForm()).Show();
+            if (calc != null)
+                (new graphForm(calc, "Ct")).Show();
         }
 
         private void nPVtToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (new graphForm()).Show();
+            if (calc != null)
+                (new graphForm(calc, "nPVt")).Show();
         }
 
         private void vtToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (new graphForm()).Show();
+            if (calc != null)
+                (new graphForm(calc, "Vt")).Show();
         }
 
         private void SetDefaultSetting()
@@ -185,13 +191,18 @@ namespace CalcRisk
             dataGridDeterComp.Columns[0].Width = 23;
             dataGridDeterComp.Columns[1].Width = 267;
             dataGridDeterComp.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+            построитьГрафикToolStripMenuItem.Enabled = false;
+            просмотрПредварительныхРезультатовToolStripMenuItem.Enabled = false;
+            расчетToolStripMenuItem.Enabled = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
-            openFileDialog.InitialDirectory = @"C:\Users\neoql\Downloads\KNIR\Два сюжета\Два сюжета\Инвестиционный проект\Осташова М.В. МИ-04-2\программа";
+            //openFileDialog.InitialDirectory = @"C:\Users\neoql\Downloads\KNIR\Два сюжета\Два сюжета\Инвестиционный проект\Осташова М.В. МИ-04-2\программа";
+            openFileDialog.InitialDirectory = Environment.CurrentDirectory;
             openFileDialog.Filter = "txt файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
@@ -200,6 +211,10 @@ namespace CalcRisk
             {
                 OpenFileXls(openFileDialog.FileName, false);
             }
+
+            построитьГрафикToolStripMenuItem.Enabled = false;
+            просмотрПредварительныхРезультатовToolStripMenuItem.Enabled = true;
+            расчетToolStripMenuItem.Enabled = true;
         }
 
         private void OpenFileXls(string strfilepath, bool hasHeader = true)
@@ -272,14 +287,14 @@ namespace CalcRisk
 
         private void выполнитьРасчетToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Calculation calc = new Calculation(
+            calc = new Calculation(
                 dataGridEquity,
                 dataGridBorrow,
                 dataGridRangeComp,
                 dataGridDeterComp,
                 txtCoef,
                 txtStartInvest,
-                (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);
+                (int)((NumericUpDown)this.nudNumPeriods.NumericUpDownControl).Value);            
 
             for (int i = 1; i <= calc.GetPUPCount; i++)
             {
@@ -297,6 +312,8 @@ namespace CalcRisk
                 var cell = Math.Round(calc.GetRt[3, i], 7);
                 dataGridResults.Rows[i].Cells[4].Value = cell;
             }
+
+            построитьГрафикToolStripMenuItem.Enabled = true;
 
         }
     }
